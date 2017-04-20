@@ -1,0 +1,7 @@
+---
+- rdf_type: originalFile
+  required: true
+  multiple: false
+- rdf_type: intermediateFile
+  required: false
+  multiple: true

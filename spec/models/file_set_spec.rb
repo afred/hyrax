@@ -655,4 +655,56 @@ describe FileSet do
     subject { file_set.to_global_id }
     it { is_expected.to be_kind_of GlobalID }
   end
+
+  describe 'validating rdf:type of member Files' do
+    let(:file_set) do
+      described_class.new.tap do |file_set|
+        # Adds the validator class
+        # TODO: Call to .validates_with should be moved out of the spec
+        # and into the FileSet class (or included module, e.g. FileSetBehavior)
+        file_set.class.validates_with ::Hyrax::RdfTypeValidator
+      end
+    end
+
+    describe '.config_file_path' do
+      xit 'returns the path to the YAML config file to use for rdf type validation'
+    end
+
+    describe '.config_file_path=' do
+      xit 'sets the path to the YAML config file to use for rdf type validation'
+    end
+
+    describe '.default_config_file_paths' do
+      xit 'returns a list of paths to look for rdf type validation config'
+    end
+
+    context 'when a member File has an unallowed rdf:type' do
+      before do
+        ::Hyrax::RdfTypeValidator.config_file_path = "#{fixture_path}/validators/rdf_type_validator/example1.yml"
+      end
+
+      it 'fails validation' do
+        expect(file_set).to_not be_valid
+      end
+    end
+
+    context 'when no member Files have a required rdf:type' do
+
+      it 'fails validation' do
+        expect(file_set).to_not be_valid
+      end
+    end
+
+    context 'when more than one member File has an rdf:type for which only one is allowed' do
+      it 'fails validation' do
+        expect(file_set).to_not be_valid
+      end
+    end
+
+    context 'when no validation rules are violated' do
+      it 'passes validation' do
+        expect(:file_set).to be_valid
+      end
+    end
+  end
 end
